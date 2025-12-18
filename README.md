@@ -1,9 +1,6 @@
 # Knight's Tour Visualizer  
 **Penyelesaian Masalah Knight's Tour dengan Visualisasi Interaktif**
 
-<img src="image.png" width="800" />
-
-
 ## Judul
 Visualisasi Knight's Tour Problem menggunakan Warnsdorff's Algorithm dengan Mode Open Tour dan Closed Tour
 
@@ -87,8 +84,7 @@ Pada mode Closed Tour:
 **Kondisi Berhasil:**
 ```
 1. Semua 64 kotak dikunjungi tepat satu kali
-2. Posisi akhir dapat menyerang posisi awal dalam satu gerakan kuda
-   (jarak Manhattan = (2,1) atau (1,2))
+2. Posisi akhir harus berada dalam satu jangkauan langkah Kuda (L-move) dari posisi awal
 ```
 
 **Verifikasi Closed Tour:**

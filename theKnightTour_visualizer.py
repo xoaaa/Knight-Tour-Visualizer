@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 from tkinter import messagebox, ttk
 import time
@@ -28,7 +29,6 @@ class KnightsTour:
         return count
     
     def solve_warnsdorff(self, start_x, start_y, closed=False):
-        """Selesaikan Knight's Tour menggunakan Warnsdorff's Algorithm"""
         self.board = [[0 for _ in range(self.n)] for _ in range(self.n)]
         self.path = [(start_x, start_y)]
         self.board[start_x][start_y] = 1
@@ -47,8 +47,9 @@ class KnightsTour:
             if not next_moves:
                 break
             
-            next_moves.sort()
-            _, current_x, current_y = next_moves[0]
+            min_access = min(move[0] for move in next_moves)
+            best_moves = [move for move in next_moves if move[0] == min_access]
+            _, current_x, current_y = random.choice(best_moves)
             
             self.board[current_x][current_y] = move_count
             self.path.append((current_x, current_y))
@@ -57,7 +58,7 @@ class KnightsTour:
         success = move_count > self.n * self.n
         
         is_closed = False
-        if success and closed:
+        if success:
             last_x, last_y = self.path[-1]
             for dx, dy in self.moves:
                 if last_x + dx == start_x and last_y + dy == start_y:
@@ -142,7 +143,6 @@ class KnightTourGUI:
                                height=canvas_height, bg="white")
         self.canvas.pack()
         
-        # Info panel
         info_frame = tk.Frame(self.root, bg="#ecf0f1", height=60)
         info_frame.pack(fill="x")
         info_frame.pack_propagate(False)
@@ -158,11 +158,10 @@ class KnightTourGUI:
         self.draw_board()
         
     def draw_board(self, show_numbers=False, animate_step=-1):
-        """Gambar papan catur"""
+        """Gambar papan catur dengan label START/END yang benar"""
         self.canvas.delete("all")
         
         for i in range(BOARD_SIZE):
-            # Row numbers (left side)
             self.canvas.create_text(BOARD_MARGIN - 20, 
                                    BOARD_MARGIN + i * CELL_SIZE + CELL_SIZE // 2,
                                    text=str(i), font=("Arial", 10, "bold"))
@@ -170,7 +169,6 @@ class KnightTourGUI:
                                    BOARD_MARGIN - 20,
                                    text=str(i), font=("Arial", 10, "bold"))
         
-        # Draw chessboard squares
         for row in range(BOARD_SIZE):
             for col in range(BOARD_SIZE):
                 x1 = BOARD_MARGIN + col * CELL_SIZE
@@ -182,55 +180,50 @@ class KnightTourGUI:
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, 
                                             outline="#8b6f47", width=2)
                 
-                # Show numbers if solved
                 if show_numbers and self.knight.board[row][col] > 0:
                     num = self.knight.board[row][col]
                     
-                    # Highlight current step during animation
                     if animate_step > 0 and num == animate_step:
                         self.canvas.create_oval(x1 + 5, y1 + 5, x2 - 5, y2 - 5,
                                                fill="#e74c3c", outline="#c0392b", width=3)
                     
-                    text_color = "#2c3e50" if num != 1 else "#27ae60"
-                    if num == len(self.knight.path):
-                        text_color = "#e74c3c"
+                    text_color = "#2c3e50"
+                    if num == 1: 
+                        text_color = "#27ae60" 
+                    elif num == len(self.knight.path): 
+                        text_color = "#e74c3c" 
                     
                     self.canvas.create_text(x1 + CELL_SIZE // 2, 
                                           y1 + CELL_SIZE // 2,
                                           text=str(num), 
                                           font=("Arial", 14, "bold"),
                                           fill=text_color)
-        
+
         if show_numbers and len(self.knight.path) > 1:
             max_step = animate_step if animate_step > 0 else len(self.knight.path)
-            
             for i in range(min(max_step - 1, len(self.knight.path) - 1)):
                 row1, col1 = self.knight.path[i]
                 row2, col2 = self.knight.path[i + 1]
-                
                 x1 = BOARD_MARGIN + col1 * CELL_SIZE + CELL_SIZE // 2
                 y1 = BOARD_MARGIN + row1 * CELL_SIZE + CELL_SIZE // 2
                 x2 = BOARD_MARGIN + col2 * CELL_SIZE + CELL_SIZE // 2
                 y2 = BOARD_MARGIN + row2 * CELL_SIZE + CELL_SIZE // 2
-                
                 self.canvas.create_line(x1, y1, x2, y2, fill="#3498db", 
-                                       width=3, arrow=tk.LAST, arrowshape=(10, 12, 5))
-        
+                                       width=2, arrow=tk.LAST)
+
         if show_numbers and self.knight.path:
             start_row, start_col = self.knight.path[0]
-            x = BOARD_MARGIN + start_col * CELL_SIZE + CELL_SIZE // 2
-            y = BOARD_MARGIN + start_row * CELL_SIZE + CELL_SIZE // 2
-            self.canvas.create_text(x, y - CELL_SIZE // 2 - 15, 
-                                   text="START", font=("Arial", 9, "bold"), 
-                                   fill="#27ae60")
+            sx = BOARD_MARGIN + start_col * CELL_SIZE + CELL_SIZE // 2
+            sy = BOARD_MARGIN + start_row * CELL_SIZE + CELL_SIZE // 2
+            self.canvas.create_text(sx, sy - 15, text="START", 
+                                   font=("Arial", 8, "bold"), fill="#27ae60")
             
             if animate_step < 0 or animate_step >= len(self.knight.path):
                 end_row, end_col = self.knight.path[-1]
-                x = BOARD_MARGIN + end_col * CELL_SIZE + CELL_SIZE // 2
-                y = BOARD_MARGIN + end_row * CELL_SIZE + CELL_SIZE // 2
-                self.canvas.create_text(x, y + CELL_SIZE // 2 + 15, 
-                                       text="END", font=("Arial", 9, "bold"), 
-                                       fill="#e74c3c")
+                ex = BOARD_MARGIN + end_col * CELL_SIZE + CELL_SIZE // 2
+                ey = BOARD_MARGIN + end_row * CELL_SIZE + CELL_SIZE // 2
+                self.canvas.create_text(ex, ey + 15, text="END", 
+                                       font=("Arial", 8, "bold"), fill="#e74c3c")
     
     def solve_tour(self):
         """Solve the knight's tour"""
