@@ -80,11 +80,9 @@ class KnightTourGUI:
         self.setup_ui()
         
     def setup_ui(self):        
-        # Control Panel
         control_frame = tk.Frame(self.root, bg="#ecf0f1", pady=15)
         control_frame.pack(fill="x")
         
-        # Input posisi awal
         pos_frame = tk.Frame(control_frame, bg="#ecf0f1")
         pos_frame.pack(pady=5)
         
@@ -107,7 +105,6 @@ class KnightTourGUI:
         self.col_entry.insert(0, "0")
         self.col_entry.pack(side="left", padx=5)
         
-        # Mode selection
         mode_frame = tk.Frame(control_frame, bg="#ecf0f1")
         mode_frame.pack(pady=10)
         
@@ -120,7 +117,6 @@ class KnightTourGUI:
         tk.Radiobutton(mode_frame, text="Closed Tour", variable=self.mode_var, 
                       value="closed", font=("Arial", 10), bg="#ecf0f1").pack(side="left", padx=10)
         
-        # Buttons
         button_frame = tk.Frame(control_frame, bg="#ecf0f1")
         button_frame.pack(pady=5)
         
@@ -136,7 +132,6 @@ class KnightTourGUI:
                  fg="black", font=("Arial", 11, "bold"), 
                  width=15, height=1, relief="raised", bd=2).pack(side="left", padx=5)
         
-        # Canvas untuk papan catur
         canvas_frame = tk.Frame(self.root, bg="white")
         canvas_frame.pack(pady=10, padx=10, fill="both", expand=True)
         
@@ -160,20 +155,17 @@ class KnightTourGUI:
                                      font=("Arial", 10, "bold"), bg="#ecf0f1", fg="#16a085")
         self.status_label.pack(pady=2)
         
-        # Draw initial empty board
         self.draw_board()
         
     def draw_board(self, show_numbers=False, animate_step=-1):
         """Gambar papan catur"""
         self.canvas.delete("all")
         
-        # Draw coordinates
         for i in range(BOARD_SIZE):
             # Row numbers (left side)
             self.canvas.create_text(BOARD_MARGIN - 20, 
                                    BOARD_MARGIN + i * CELL_SIZE + CELL_SIZE // 2,
                                    text=str(i), font=("Arial", 10, "bold"))
-            # Column numbers (top)
             self.canvas.create_text(BOARD_MARGIN + i * CELL_SIZE + CELL_SIZE // 2,
                                    BOARD_MARGIN - 20,
                                    text=str(i), font=("Arial", 10, "bold"))
