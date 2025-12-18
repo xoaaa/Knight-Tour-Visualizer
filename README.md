@@ -1,6 +1,9 @@
 # Knight's Tour Visualizer  
 **Penyelesaian Masalah Knight's Tour dengan Visualisasi Interaktif**
 
+<img src="image.png" width="800" />
+
+
 ## Judul
 Visualisasi Knight's Tour Problem menggunakan Warnsdorff's Algorithm dengan Mode Open Tour dan Closed Tour
 

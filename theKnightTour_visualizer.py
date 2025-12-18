@@ -201,7 +201,6 @@ class KnightTourGUI:
                                           font=("Arial", 14, "bold"),
                                           fill=text_color)
         
-        # Draw path
         if show_numbers and len(self.knight.path) > 1:
             max_step = animate_step if animate_step > 0 else len(self.knight.path)
             
@@ -217,7 +216,6 @@ class KnightTourGUI:
                 self.canvas.create_line(x1, y1, x2, y2, fill="#3498db", 
                                        width=3, arrow=tk.LAST, arrowshape=(10, 12, 5))
         
-        # Mark start and end positions
         if show_numbers and self.knight.path:
             start_row, start_col = self.knight.path[0]
             x = BOARD_MARGIN + start_col * CELL_SIZE + CELL_SIZE // 2
@@ -250,7 +248,6 @@ class KnightTourGUI:
             closed = self.mode_var.get() == "closed"
             
             if closed:
-                # Try to find closed tour
                 max_attempts = 100
                 found = False
                 for attempt in range(max_attempts):
@@ -268,10 +265,8 @@ class KnightTourGUI:
             else:
                 success, is_closed = self.knight.solve_warnsdorff(start_row, start_col, False)
             
-            # Draw the result
             self.draw_board(show_numbers=True)
             
-            # Update info
             visited = len(self.knight.path)
             tour_type = "CLOSED TOUR" if (closed and is_closed) else "OPEN TOUR"
             
